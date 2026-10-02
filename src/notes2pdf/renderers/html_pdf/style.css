@@ -1,0 +1,44 @@
+@page {
+  size: A4;
+  margin: 2.2cm 2cm 2.4cm;
+  @bottom-center { content: counter(page) " / " counter(pages); font-size: 9pt; color: #888; }
+}
+
+html { font-family: "Inter", "DejaVu Sans", "Helvetica", sans-serif; font-size: 10.5pt; line-height: 1.5; color: #222; }
+
+section.page + section.page { break-before: page; }
+h1.page-title { font-size: 22pt; margin: 0 0 .2em; string-set: chapter content(); }
+.breadcrumb { color: #888; font-size: 9pt; margin: 0 0 1.5em; }
+h2 { font-size: 16pt; margin: 1.4em 0 .4em; }
+h3 { font-size: 13pt; margin: 1.2em 0 .3em; }
+h4 { font-size: 11pt; margin: 1em 0 .3em; }
+h2, h3, h4 { break-after: avoid; }
+
+p { margin: .4em 0; }
+a { color: #2563eb; text-decoration: none; }
+code { font-family: "JetBrains Mono", "DejaVu Sans Mono", monospace; font-size: .9em; background: #f3f3f1; color: #c7254e; padding: .05em .3em; border-radius: 3px; }
+
+ul, ol { margin: .3em 0; padding-left: 1.4em; }
+ul.todo { list-style: none; padding-left: .2em; }
+ul.todo li.done { color: #888; text-decoration: line-through; }
+.box { font-family: "DejaVu Sans", sans-serif; }
+
+blockquote { border-left: 3px solid #333; margin: .8em 0; padding: .1em 0 .1em 1em; }
+.callout { display: flex; gap: .6em; background: #f7f6f3; border-radius: 4px; padding: .7em 1em; margin: .8em 0; break-inside: avoid; }
+.callout .icon { flex: none; }
+.toggle .summary { font-weight: 600; }
+.toggle .body { margin-left: 1.2em; }
+
+figure { margin: 1em 0; }
+figure.code pre { background: #f7f6f3; border-radius: 4px; padding: .8em 1em; white-space: pre-wrap; font-size: 9pt; }
+figure.code pre code { background: none; color: inherit; padding: 0; }
+pre.equation { text-align: center; font-family: "DejaVu Serif", serif; }
+figure.image img { max-width: 100%; display: block; margin: 0 auto; }
+figcaption { color: #777; font-size: 9pt; text-align: center; margin-top: .3em; }
+
+table { border-collapse: collapse; width: 100%; margin: .8em 0; font-size: 9.5pt; }
+th, td { border: 1px solid #ddd; padding: .35em .6em; text-align: left; vertical-align: top; }
+th { background: #f7f6f3; }
+
+hr { border: none; border-top: 1px solid #ddd; margin: 1.2em 0; }
+.group { margin: .4em 0; }

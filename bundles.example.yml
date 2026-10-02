@@ -1,0 +1,18 @@
+# Copy this file to bundles.yml and run build.py.
+# Each bundle becomes one PDF. Pages are included in the order listed.
+# `page` accepts a Notion URL ("Copy link" in Notion) or a page id.
+
+source: notion   # token is read from NOTION_TOKEN in .env
+
+bundles:
+  - title: Networks
+    output: out/networks.pdf
+    include:
+      - page: https://www.notion.so/Networks-0123456789abcdef0123456789abcdef
+
+  - title: Exam review
+    output: out/review.pdf
+    include:
+      - page: https://www.notion.so/Topic-1-0123456789abcdef0123456789abcdef
+      - page: https://www.notion.so/Topic-3-fedcba9876543210fedcba9876543210
+        children: false   # only this page, without its subpages

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>{{ title }}</title>
+  <style>{{ css | safe }}</style>
+</head>
+<body>
+{% for s in sections %}
+  <section class="page depth-{{ s.depth }}" id="p-{{ s.page.id }}">
+    <h1 class="page-title">{{ s.page.title }}</h1>
+    {% if s.page.path | length > 1 %}<p class="breadcrumb">{{ s.page.path[:-1] | join(" › ") }}</p>{% endif %}
+    {{ s.body | safe }}
+  </section>
+{% endfor %}
+</body>
+</html>

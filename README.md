@@ -48,6 +48,14 @@ Without it, embeds are shown as a placeholder card and the build carries on.
 
 `bundles.yml` is git-ignored because it points to your own pages.
 
+### Keeping your config private
+
+Keep `bundles.yml` in a separate private repository next to this one and link it:
+
+```bash
+ln -s ../notes2pdf-config/bundles.yml bundles.yml
+```
+
 ### Bundle options
 
 | Option | Default | |

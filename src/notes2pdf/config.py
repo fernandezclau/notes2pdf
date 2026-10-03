@@ -61,7 +61,13 @@ def load_config(path: Path) -> Config:
         raise ConfigError("`source` needs a `type` (e.g. notion)")
 
     bundles = []
+    defaults = raw.get("defaults") or {}
+    if not isinstance(defaults, dict):
+        raise ConfigError("`defaults` must be a mapping of bundle options")
+    if {"output", "include"} & defaults.keys():
+        raise ConfigError("`defaults` can't set `output` or `include`")
     for i, b in enumerate(raw.get("bundles") or []):
+        b = {**defaults, **b}  # options set in the bundle win over the defaults
         where = f"bundles[{i}]"
         if "output" not in b:
             raise ConfigError(f"{where}: missing `output`")

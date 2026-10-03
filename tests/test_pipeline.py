@@ -1,3 +1,5 @@
+import re
+
 import pytest
 
 from fake_notion import CHILD, ROOT, FakeNotion
@@ -77,10 +79,12 @@ def test_render_pdf(source, tmp_path):
 
 def test_render_math(source):
     html = HtmlPdfRenderer().render_html([source.fetch(ROOT)])
-    assert '<div class="equation"><svg' in html  # block equation
-    assert '<svg style="vertical-align' in html  # inline equation, baseline-aligned
+    assert '<div class="equation"><span class="tex">$$\\mu = ' in html  # block: LaTeX text + SVG
+    assert '<span class="math"><span class="tex">$\\mu$</span><svg style="vertical-align' in html  # inline
     assert '<pre class="equation math-error">\\frac{</pre>' in html  # invalid LaTeX falls back
-    assert "\\mu" not in html.replace("math-error", "")  # no raw LaTeX for valid input
+    # Valid LaTeX only appears inside the invisible text layer, never as visible text.
+    visible = re.sub(r'<span class="tex">.*?</span>', "", html)
+    assert "\\mu" not in visible
 
 
 def test_numbered_list_continues(source):
@@ -96,7 +100,7 @@ def test_cover_and_toc(source):
     # Pages and headings, linked to their anchors; topic 1 starts at heading_2.
     assert f'<li class="level-0"><a href="#p-{ROOT}">Networks</a>' in toc
     assert f'<li class="level-1"><a href="#p-{CHILD}">Topic 1</a>' in toc
-    assert f'<li class="level-2"><a href="#h-{CHILD}-1">Why <svg' in toc
+    assert f'<li class="level-2"><a href="#h-{CHILD}-1">Why <span class="math">' in toc
     assert f'<li class="level-3"><a href="#h-{CHILD}-2">Detail' not in toc  # beyond toc_depth=3
     assert f'id="h-{CHILD}-1"' in html and 'data-label="Why γ"' in html  # bookmark label
 

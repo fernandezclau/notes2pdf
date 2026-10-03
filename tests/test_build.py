@@ -63,3 +63,26 @@ bundles:
     outputs = build_all(path, source=NotionApiSource(client=FakeNotion()), log=lambda _: None)
     assert outputs == [tmp_path / "out/a.pdf", tmp_path / "out/b.pdf"]
     assert all(p.read_bytes().startswith(b"%PDF") for p in outputs)
+
+
+def test_defaults_apply_to_every_bundle(tmp_path):
+    cfg = load_config(write(tmp_path, """
+defaults:
+  cover: false
+  embeds: initial
+  exclude: Draft*
+bundles:
+  - output: a.pdf
+    include: [x]
+  - output: b.pdf
+    cover: true
+    include: [y]
+"""))
+    a, b = cfg.bundles
+    assert (a.options.cover, a.options.embeds, a.include[0].exclude) == (False, "initial", ["Draft*"])
+    assert (b.options.cover, b.options.embeds) == (True, "initial")  # bundle value wins
+
+
+def test_defaults_cannot_set_include(tmp_path):
+    with pytest.raises(ConfigError, match="can't set"):
+        load_config(write(tmp_path, "defaults:\n  include: [x]\nbundles:\n  - output: a.pdf\n    include: [y]\n"))

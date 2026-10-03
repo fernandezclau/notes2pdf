@@ -37,7 +37,11 @@ blockquote { border-left: 3px solid #333; margin: .8em 0; padding: .1em 0 .1em 1
 figure { margin: 1em 0; }
 figure.code pre { background: #f7f6f3; border-radius: 4px; padding: .8em 1em; white-space: pre-wrap; font-size: 9pt; }
 figure.code pre code { background: none; color: inherit; padding: 0; }
-div.equation { text-align: center; margin: .8em 0; break-inside: avoid; }
+div.equation { text-align: center; margin: .8em 0; break-inside: avoid; position: relative; }
+/* LaTeX source behind each equation: invisible, but part of the PDF text layer */
+.tex { display: inline-block; width: 0; height: 0; line-height: 0; overflow: hidden; white-space: nowrap;
+       color: transparent; vertical-align: baseline; }
+div.equation .tex { display: block; position: absolute; top: 50%; left: 0; }
 pre.equation { text-align: center; }
 .math-error { color: #b91c1c; background: #fef2f2; }
 svg { overflow: visible; }

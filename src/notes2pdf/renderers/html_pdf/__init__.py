@@ -31,8 +31,7 @@ def render_spans(spans: list[Span], links: bool = True) -> str:
     out = []
     for s in spans:
         if s.math:
-            svg = latex_to_svg(s.text, inline=True)
-            out.append(svg if svg is not None else f'<code class="math-error">{escape(s.text)}</code>')
+            out.append(math_html(s.text, inline=True))
             continue
         html = escape(s.text).replace("\n", "<br>")
         if s.code:
@@ -49,6 +48,23 @@ def render_spans(spans: list[Span], links: bool = True) -> str:
             html = f'<a href="{escape(s.href)}">{html}</a>'
         out.append(html)
     return "".join(out)
+
+
+def math_html(expr: str, inline: bool) -> str:
+    """Equation as SVG, with its LaTeX as invisible text behind it so the PDF's text
+    layer keeps the formula (for search, copy-paste and tools like NotebookLM)."""
+    svg = latex_to_svg(expr, inline)
+    if svg is None:
+        if inline:
+            return f'<code class="math-error">{escape(expr)}</code>'
+        return f'<pre class="equation math-error">{escape(expr)}</pre>'
+    if not svg:
+        return ""
+    delim = "$" if inline else "$$"
+    tex = f'<span class="tex">{delim}{escape(expr.strip())}{delim}</span>'
+    if inline:
+        return f'<span class="math">{tex}{svg}</span>'
+    return f'<div class="equation">{tex}{svg}</div>'
 
 
 def plain_text(spans: list[Span]) -> str:
@@ -164,11 +180,7 @@ class _PageWriter:
         if t == m.DIVIDER:
             return "<hr>"
         if t == m.EQUATION:
-            expr = b.attrs.get("expression", "")
-            svg = latex_to_svg(expr, inline=False)
-            if svg is None:
-                return f'<pre class="equation math-error">{escape(expr)}</pre>'
-            return f'<div class="equation">{svg}</div>'
+            return math_html(b.attrs.get("expression", ""), inline=False)
         if t == m.IMAGE:
             caption = render_spans(b.attrs.get("caption", []))
             cap = f"<figcaption>{caption}</figcaption>" if caption else ""

@@ -6,3 +6,5 @@ __pycache__/
 out/
 *.pdf
 bundles.yml
+bundles.*.yml
+!bundles.example.yml

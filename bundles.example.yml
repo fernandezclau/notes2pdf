@@ -6,6 +6,9 @@ source: notion   # token is read from NOTION_TOKEN in .env
 cache: true      # keep fetched pages and images in .cache/ (default true; false to disable)
 check_updates: true   # ask Notion which pages changed (default true); false = reuse .cache/ as is, much faster
 
+defaults:        # options applied to every bundle (a bundle can override them)
+  cover: true
+
 bundles:
   - title: Networks
     output: out/networks.pdf

@@ -10,6 +10,9 @@ dependencies = [
     "jinja2>=3.1",
     "pyyaml>=6",
     "python-dotenv>=1.0",
+    "ziamath>=0.13",
+    "pygments>=2.21.0",
+    "playwright>=1.63.0",
 ]
 
 [dependency-groups]

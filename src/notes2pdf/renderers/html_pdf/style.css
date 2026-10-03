@@ -7,12 +7,17 @@
 html { font-family: "Inter", "DejaVu Sans", "Helvetica", sans-serif; font-size: 10.5pt; line-height: 1.5; color: #222; }
 
 section.page + section.page { break-before: page; }
-h1.page-title { font-size: 22pt; margin: 0 0 .2em; string-set: chapter content(); }
+/* A page with only subpages acts as a section heading for the next one. */
+section.page.empty + section.page { break-before: auto; }
+section.page.empty h1.page-title { font-size: 26pt; color: #2563eb; border-bottom: 2px solid #2563eb; padding-bottom: .2em; margin-bottom: 1.2em; }
+h1.page-title { font-size: 22pt; margin: 0 0 .2em; }
+h1, h2, h3, h4, h5, h6 { bookmark-label: attr(data-label); }
 .breadcrumb { color: #888; font-size: 9pt; margin: 0 0 1.5em; }
 h2 { font-size: 16pt; margin: 1.4em 0 .4em; }
 h3 { font-size: 13pt; margin: 1.2em 0 .3em; }
 h4 { font-size: 11pt; margin: 1em 0 .3em; }
-h2, h3, h4 { break-after: avoid; }
+h5, h6 { font-size: 10.5pt; margin: .9em 0 .2em; color: #444; }
+h2, h3, h4, h5, h6 { break-after: avoid; }
 
 p { margin: .4em 0; }
 a { color: #2563eb; text-decoration: none; }
@@ -32,8 +37,22 @@ blockquote { border-left: 3px solid #333; margin: .8em 0; padding: .1em 0 .1em 1
 figure { margin: 1em 0; }
 figure.code pre { background: #f7f6f3; border-radius: 4px; padding: .8em 1em; white-space: pre-wrap; font-size: 9pt; }
 figure.code pre code { background: none; color: inherit; padding: 0; }
-pre.equation { text-align: center; font-family: "DejaVu Serif", serif; }
+div.equation { text-align: center; margin: .8em 0; break-inside: avoid; }
+pre.equation { text-align: center; }
+.math-error { color: #b91c1c; background: #fef2f2; }
+svg { overflow: visible; }
 figure.image img { max-width: 100%; display: block; margin: 0 auto; }
+
+/* Interactive HTML embeds: initial state + one small image per state */
+figure.embed { border: 1px solid #e5e5e3; border-radius: 6px; padding: .8em; }
+figure.embed img { display: block; max-width: 100%; max-height: 22cm; margin: 0 auto; }
+figure.embed > figcaption { font-size: 9.5pt; color: #444; margin: .5em 0 0; }
+figure.embed .count { color: #888; }
+figure.embed .states { display: flex; flex-wrap: wrap; justify-content: space-between; margin-top: .6em; }
+figure.embed figure.state { width: 48.5%; margin: .4em 0; break-inside: avoid; }
+figure.embed figure.state img { border: 1px solid #eee; max-height: 11cm; }
+figure.embed figure.state figcaption { font-size: 8.5pt; margin-top: .2em; }
+.embed-card { border: 1px dashed #bbb; border-radius: 6px; padding: .6em 1em; margin: .8em 0; color: #555; font-size: 9.5pt; }
 figcaption { color: #777; font-size: 9pt; text-align: center; margin-top: .3em; }
 
 table { border-collapse: collapse; width: 100%; margin: .8em 0; font-size: 9.5pt; }
@@ -42,3 +61,28 @@ th { background: #f7f6f3; }
 
 hr { border: none; border-top: 1px solid #ddd; margin: 1.2em 0; }
 .group { margin: .4em 0; }
+
+/* Cover */
+@page cover { margin: 0; @bottom-center { content: none; } }
+section.cover {
+  page: cover; break-after: page; height: 297mm; box-sizing: border-box;
+  padding: 9cm 2.5cm 3cm; display: flex; flex-direction: column;
+  border-top: 1.2cm solid #2563eb;
+}
+section.cover h1 { font-size: 34pt; line-height: 1.15; margin: 0; bookmark-level: none; }
+section.cover .subtitle { font-size: 15pt; color: #555; margin-top: .6em; }
+section.cover .meta { margin-top: auto; color: #777; font-size: 10pt; }
+section.cover .meta p { margin: .1em 0; }
+
+/* Table of contents */
+nav.toc { break-after: page; }
+nav.toc h2 { font-size: 20pt; margin: 0 0 1em; bookmark-level: none; }
+nav.toc ul { list-style: none; padding: 0; margin: 0; }
+nav.toc li { margin: .25em 0; }
+nav.toc a { color: inherit; }
+nav.toc a::after { content: leader(".") target-counter(attr(href url), page); color: #777; }
+nav.toc li.level-0 { font-weight: 600; margin-top: .8em; }
+nav.toc li.level-1 { padding-left: 1.2em; }
+nav.toc li.level-2 { padding-left: 2.4em; font-size: .95em; }
+nav.toc li.level-3 { padding-left: 3.6em; font-size: .9em; color: #555; }
+nav.toc li.level-4, nav.toc li.level-5 { padding-left: 4.8em; font-size: .9em; color: #555; }

@@ -27,14 +27,17 @@ bundles:
         children: false
 """))
     assert cfg.source == {"type": "notion"}
+    assert cfg.check_updates is True and cfg.cache_dir == tmp_path / ".cache"
     first, second = cfg.bundles
-    assert first.title == "All"
+    assert first.options.title == "All"
+    assert first.options.cover and first.options.toc_depth == 3
     assert first.output == tmp_path / "out/all.pdf"  # relative to the config file
-    assert [(i.page, i.children) for i in second.include] == [(CHILD, True), (ROOT, False)]
+    assert [(i.page, i.depth) for i in second.include] == [(CHILD, None), (ROOT, 0)]
 
 
 @pytest.mark.parametrize("text, error", [
     ("bundles: []", "No bundles"),
+    ("check_updates: sometimes\nbundles:\n  - output: a.pdf\n    include: [x]", "must be true or false"),
     ("bundles:\n  - include: [x]", "missing `output`"),
     ("bundles:\n  - output: a.pdf", "`include` is empty"),
     ("bundles:\n  - output: a.pdf\n    include:\n      - children: true", "missing `page`"),

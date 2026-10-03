@@ -1,8 +1,10 @@
 # Copy this file to bundles.yml and run build.py.
 # Each bundle becomes one PDF. Pages are included in the order listed.
-# `page` accepts a Notion URL ("Copy link" in Notion) or a page id.
+# `page` accepts a Notion URL ("Copy link" in Notion) or a page/database id.
 
 source: notion   # token is read from NOTION_TOKEN in .env
+cache: true      # keep fetched pages and images in .cache/ (default true; false to disable)
+check_updates: true   # ask Notion which pages changed (default true); false = reuse .cache/ as is, much faster
 
 bundles:
   - title: Networks
@@ -11,8 +13,20 @@ bundles:
       - page: https://www.notion.so/Networks-0123456789abcdef0123456789abcdef
 
   - title: Exam review
+    subtitle: Deep Learning, topics 1 and 3   # optional
+    author: Your name                         # optional
     output: out/review.pdf
+    cover: true        # cover page (default true)
+    toc: true          # linked table of contents with page numbers (default true)
+    toc_depth: 3       # levels in the TOC: pages + headings (default 3)
+    embeds: states     # interactive HTML embeds: states | initial | link (default states)
+    embed_states: 8    # max images per embed (default 8)
+    exclude: "Draft*"  # drop matching subpages from every include below
     include:
       - page: https://www.notion.so/Topic-1-0123456789abcdef0123456789abcdef
+        depth: 1           # this page and its direct subpages only (default: all levels)
+        exclude: [Old notes, "Topic 1/Archive/*"]   # by title, path or id; * and ? allowed
       - page: https://www.notion.so/Topic-3-fedcba9876543210fedcba9876543210
-        children: false   # only this page, without its subpages
+        children: false    # only this page, without subpages (same as depth: 0)
+      - page: https://www.notion.so/Exercises-db-00112233445566778899aabbccddeeff
+        tags: [exam]       # only subpages / database rows tagged "exam"

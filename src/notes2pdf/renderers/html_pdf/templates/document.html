@@ -3,14 +3,35 @@
 <head>
   <meta charset="utf-8">
   <title>{{ title }}</title>
-  <style>{{ css | safe }}</style>
+  {% if options.author %}<meta name="author" content="{{ options.author }}">{% endif %}
+  <style>{{ css }}</style>
 </head>
 <body>
+{% if options.cover %}
+  <section class="cover">
+    <h1>{{ title }}</h1>
+    {% if options.subtitle %}<p class="subtitle">{{ options.subtitle }}</p>{% endif %}
+    <div class="meta">
+      {% if options.author %}<p>{{ options.author }}</p>{% endif %}
+      <p>{{ date }}</p>
+    </div>
+  </section>
+{% endif %}
+{% if toc %}
+  <nav class="toc">
+    <h2>Contents</h2>
+    <ul>
+    {% for e in toc %}
+      <li class="level-{{ e.level }}"><a href="#{{ e.anchor }}">{{ e.html | safe }}</a></li>
+    {% endfor %}
+    </ul>
+  </nav>
+{% endif %}
 {% for s in sections %}
-  <section class="page depth-{{ s.depth }}" id="p-{{ s.page.id }}">
-    <h1 class="page-title">{{ s.page.title }}</h1>
+  <section class="page depth-{{ s.depth }}{% if s.empty %} empty{% endif %}">
+    {{ s.title }}
     {% if s.page.path | length > 1 %}<p class="breadcrumb">{{ s.page.path[:-1] | join(" › ") }}</p>{% endif %}
-    {{ s.body | safe }}
+    {{ s.body }}
   </section>
 {% endfor %}
 </body>
